@@ -2011,7 +2011,7 @@ void cpu_physical_memory_write_rom(hwaddr addr,
 
         if (!(memory_region_is_ram(section->mr) ||
               memory_region_is_romd(section->mr))) {
-            /* do nothing */
+            cpu_abort(first_cpu, "Attempting to load malformed ROM at address: 0x%" PRIx64 "\n", addr);
         } else {
             unsigned long addr1;
             addr1 = memory_region_get_ram_addr(section->mr)
@@ -2602,7 +2602,6 @@ int cpu_memory_rw_debug(CPUArchState *env, target_ulong addr,
 #endif
 
 #if !defined(CONFIG_USER_ONLY)
-
 /*
  * A helper function for the _utterly broken_ virtio device model to find out if
  * it's running on a big endian machine. Don't do this at home kids!
