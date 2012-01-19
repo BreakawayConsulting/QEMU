@@ -48,6 +48,11 @@
 #include <sys/sysctl.h>
 #endif
 
+#if defined(__APPLE__) && defined(__MACH__)
+#include <mach-o/dyld.h>
+#endif
+
+
 static struct passwd *user_pwd;
 static const char *chroot_dir;
 static int daemonize;
@@ -110,6 +115,14 @@ char *os_find_datadir(const char *argv0)
         if (!sysctl(mib, ARRAY_SIZE(mib), buf, &len, NULL, 0) &&
             *buf) {
             buf[sizeof(buf) - 1] = '\0';
+            p = buf;
+        }
+    }
+#elif defined(__APPLE__) && defined(__MACH__)
+    {
+        uint32_t len = sizeof(buf);
+
+        if(!_NSGetExecutablePath(buf, &len)) {
             p = buf;
         }
     }
