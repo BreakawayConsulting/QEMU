@@ -23,7 +23,9 @@
  */
 #include "qemu-common.h"
 #include "monitor/monitor.h"
+#ifdef CONFIG_CONSOLE
 #include "ui/console.h"
+#endif
 #include "sysemu/sysemu.h"
 #include "qemu/timer.h"
 #include "char/char.h"
@@ -749,7 +751,7 @@ typedef struct FDCharDriver {
 static int fd_chr_write(CharDriverState *chr, const uint8_t *buf, int len)
 {
     FDCharDriver *s = chr->opaque;
-    
+
     return io_channel_send(s->fd_out, buf, len);
 }
 
@@ -2136,7 +2138,7 @@ static CharDriverState *qemu_chr_open_stdio(ChardevStdio *opts)
         }
     } else {
         DWORD   dwId;
-            
+
         stdio->hInputReadyEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
         stdio->hInputDoneEvent  = CreateEvent(NULL, FALSE, FALSE, NULL);
         stdio->hInputThread     = CreateThread(NULL, 0, win_stdio_thread,
@@ -3713,9 +3715,11 @@ ChardevReturn *qmp_chardev_add(const char *id, ChardevBackend *backend,
         }
         chr = qemu_chr_open_mux(base);
         break;
+#ifdef CONFIG_MSMOUSE
     case CHARDEV_BACKEND_KIND_MSMOUSE:
         chr = qemu_chr_open_msmouse();
         break;
+#endif
 #ifdef CONFIG_BRLAPI
     case CHARDEV_BACKEND_KIND_BRAILLE:
         chr = chr_baum_init();
@@ -3737,9 +3741,11 @@ ChardevReturn *qmp_chardev_add(const char *id, ChardevBackend *backend,
         chr = qemu_chr_open_spice_port(backend->spiceport->fqdn);
         break;
 #endif
+#ifdef CONFIG_CONSOLE
     case CHARDEV_BACKEND_KIND_VC:
         chr = vc_init(backend->vc);
         break;
+#endif
     case CHARDEV_BACKEND_KIND_MEMORY:
         chr = qemu_chr_open_ringbuf(backend->memory, errp);
         break;

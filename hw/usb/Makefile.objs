@@ -10,7 +10,7 @@ common-obj-$(CONFIG_USB_XHCI) += hcd-xhci.o
 
 # emulated usb devices
 common-obj-y += dev-hub.o
-common-obj-y += dev-hid.o
+common-obj-$(CONFIG_CONSOLE) += dev-hid.o
 common-obj-$(CONFIG_USB_TABLET_WACOM) += dev-wacom.o
 common-obj-$(CONFIG_USB_STORAGE_BOT)  += dev-storage.o
 common-obj-$(CONFIG_USB_STORAGE_UAS)  += dev-uas.o

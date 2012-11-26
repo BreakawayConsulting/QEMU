@@ -214,6 +214,7 @@ zero_malloc=""
 trace_backend="nop"
 trace_file="trace"
 spice=""
+console="yes"
 rbd=""
 smartcard_nss=""
 usb_redir=""
@@ -779,6 +780,10 @@ for opt do
   ;;
   --enable-spice) spice="yes"
   ;;
+  --disable-console) console="no"
+  ;;
+  --enable-console) console="yes"
+  ;;
   --disable-libiscsi) libiscsi="no"
   ;;
   --enable-libiscsi) libiscsi="yes"
@@ -1155,6 +1160,8 @@ echo "  --with-trace-file=NAME   Full PATH,NAME of file to store traces"
 echo "                           Default:trace-<pid>"
 echo "  --disable-spice          disable spice"
 echo "  --enable-spice           enable spice"
+echo "  --disable-console        disable console"
+echo "  --enable-console         enable console"
 echo "  --enable-rbd             enable building the rados block device (rbd)"
 echo "  --disable-libiscsi       disable iscsi support"
 echo "  --enable-libiscsi        enable iscsi support"
@@ -2225,6 +2232,8 @@ fi
 if test "$pixman" = ""; then
   if test "$want_tools" = "no" -a "$softmmu" = "no"; then
     pixman="none"
+  elif test "$console" = "no"; then
+    pixman="none"
   elif $pkg_config pixman-1 > /dev/null 2>&1; then
     pixman="system"
   else
@@ -2232,8 +2241,8 @@ if test "$pixman" = ""; then
   fi
 fi
 if test "$pixman" = "none"; then
-  if test "$want_tools" != "no" -o "$softmmu" != "no"; then
-    echo "ERROR: pixman disabled but system emulation or tools build"
+  if test "$want_tools" != "no" -o \( "$console" = "yes" -a "$softmmu" != "yes" \); then
+    echo "ERROR: pixman disabled but system emulation or tools build $want_tools $softmmu $console"
     echo "       enabled.  You can turn off pixman only if you also"
     echo "       disable all system emulation targets and the tools"
     echo "       build with '--disable-tools --disable-system'."
@@ -2244,7 +2253,7 @@ if test "$pixman" = "none"; then
 elif test "$pixman" = "system"; then
   pixman_cflags=`$pkg_config --cflags pixman-1 2>/dev/null`
   pixman_libs=`$pkg_config --libs pixman-1 2>/dev/null`
-else
+elif test "$pixman" = "internal"; then
   if test ! -d ${source_path}/pixman/pixman; then
     echo "ERROR: pixman not present. Your options:"
     echo "  (1) Preferred: Install the pixman devel package (any recent"
@@ -3743,6 +3752,10 @@ fi
 
 if test "$spice" = "yes" ; then
   echo "CONFIG_SPICE=y" >> $config_host_mak
+fi
+
+if test "$console" = "yes" ; then
+  echo "CONFIG_CONSOLE=y" >> $config_host_mak
 fi
 
 if test "$smartcard_nss" = "yes" ; then

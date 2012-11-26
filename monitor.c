@@ -38,7 +38,9 @@
 #include "sysemu/sysemu.h"
 #include "monitor/monitor.h"
 #include "monitor/readline.h"
+#ifdef CONFIG_CONSOLE
 #include "ui/console.h"
+#endif
 #include "sysemu/blockdev.h"
 #include "audio/audio.h"
 #include "disas/disas.h"
@@ -813,7 +815,7 @@ static void do_trace_file(Monitor *mon, const QDict *qdict)
 
 static void user_monitor_complete(void *opaque, QObject *ret_data)
 {
-    MonitorCompletionData *data = (MonitorCompletionData *)opaque; 
+    MonitorCompletionData *data = (MonitorCompletionData *)opaque;
 
     if (ret_data) {
         data->user_print(data->mon, ret_data);
@@ -1266,10 +1268,13 @@ static void do_sum(Monitor *mon, const QDict *qdict)
     monitor_printf(mon, "%05d\n", sum);
 }
 
+#ifdef CONFIG_CONSOLE
 static int mouse_button_state;
+#endif
 
 static void do_mouse_move(Monitor *mon, const QDict *qdict)
 {
+#ifdef CONFIG_CONSOLE
     int dx, dy, dz;
     const char *dx_str = qdict_get_str(qdict, "dx_str");
     const char *dy_str = qdict_get_str(qdict, "dy_str");
@@ -1280,14 +1285,28 @@ static void do_mouse_move(Monitor *mon, const QDict *qdict)
     if (dz_str)
         dz = strtol(dz_str, NULL, 0);
     kbd_mouse_event(dx, dy, dz, mouse_button_state);
+#else
+    monitor_printf(mon, "Mouse move not supported\n");
+#endif
 }
 
 static void do_mouse_button(Monitor *mon, const QDict *qdict)
 {
+#ifdef CONFIG_CONSOLE
     int button_state = qdict_get_int(qdict, "button_state");
     mouse_button_state = button_state;
     kbd_mouse_event(0, 0, 0, mouse_button_state);
+#else
+    monitor_printf(mon, "Mouse button not supported\n");
+#endif
 }
+
+#ifndef CONFIG_CONSOLE
+static void do_mouse_set(Monitor *mon, const QDict *qdict)
+{
+    monitor_printf(mon, "Mouse button not supported\n");
+}
+#endif
 
 static void do_ioport_read(Monitor *mon, const QDict *qdict)
 {
@@ -3549,11 +3568,11 @@ static int default_fmt_size = 4;
 static int is_valid_option(const char *c, const char *typestr)
 {
     char option[3];
-  
+
     option[0] = '-';
     option[1] = *c;
     option[2] = '\0';
-  
+
     typestr = strstr(typestr, option);
     return (typestr != NULL);
 }
@@ -3916,7 +3935,7 @@ static const mon_cmd_t *monitor_parse_command(Monitor *mon,
                     p++;
                     if(c != *p) {
                         if(!is_valid_option(p, typestr)) {
-                  
+
                             monitor_printf(mon, "%s: unsupported option -%c\n",
                                            cmdname, *p);
                             goto fail;
@@ -4303,7 +4322,7 @@ static int check_client_args_type(const QDict *client_args,
             if (qobject_type(client_arg) != QTYPE_QINT) {
                 qerror_report(QERR_INVALID_PARAMETER_TYPE, client_arg_name,
                               "int");
-                return -1; 
+                return -1;
             }
             break;
         case 'T':
@@ -4311,7 +4330,7 @@ static int check_client_args_type(const QDict *client_args,
                 qobject_type(client_arg) != QTYPE_QFLOAT) {
                 qerror_report(QERR_INVALID_PARAMETER_TYPE, client_arg_name,
                               "number");
-               return -1; 
+               return -1;
             }
             break;
         case 'b':
@@ -4319,7 +4338,7 @@ static int check_client_args_type(const QDict *client_args,
             if (qobject_type(client_arg) != QTYPE_QBOOL) {
                 qerror_report(QERR_INVALID_PARAMETER_TYPE, client_arg_name,
                               "bool");
-               return -1; 
+               return -1;
             }
             break;
         case 'O':

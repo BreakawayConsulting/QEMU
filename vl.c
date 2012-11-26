@@ -130,7 +130,9 @@ int main(int argc, char **argv)
 #include "net/net.h"
 #include "net/slirp.h"
 #include "monitor/monitor.h"
+#ifdef CONFIG_CONSOLE
 #include "ui/console.h"
+#endif
 #include "sysemu/sysemu.h"
 #include "exec/gdbstub.h"
 #include "qemu/timer.h"
@@ -949,8 +951,10 @@ static struct bt_device_s *bt_device_add(const char *opt)
         fprintf(stderr, "qemu: warning: adding a slave device to "
                         "an empty scatternet %i\n", vlan_id);
 
+#ifdef CONFIG_CONSOLE
     if (!strcmp(devname, "keyboard"))
         return bt_keyboard_init(vlan);
+#endif
 
     fprintf(stderr, "qemu: unsupported bluetooth device `%s'\n", devname);
     return 0;
@@ -1630,6 +1634,7 @@ MachineInfoList *qmp_query_machines(Error **errp)
 /***********************************************************/
 /* main execution loop */
 
+#ifdef CONFIG_CONSOLE
 static void gui_update(void *opaque)
 {
     uint64_t interval = GUI_REFRESH_INTERVAL;
@@ -1678,6 +1683,7 @@ void gui_setup_refresh(DisplayState *ds)
     ds->have_gfx = have_gfx;
     ds->have_text = have_text;
 }
+#endif
 
 struct vm_change_state_entry {
     VMChangeStateHandler *cb;
@@ -2857,7 +2863,9 @@ int main(int argc, char **argv, char **envp)
     const char *initrd_filename;
     const char *kernel_filename, *kernel_cmdline;
     char boot_devices[33] = "";
+#ifdef CONFIG_CONSOLE
     DisplayState *ds;
+#endif
     int cyls, heads, secs, translation;
     QemuOpts *hda_opts = NULL, *opts, *machine_opts;
     QemuOptsList *olist;
@@ -4332,7 +4340,9 @@ int main(int argc, char **argv, char **envp)
     net_check_clients();
 
     /* just use the first displaystate for the moment */
+#ifdef CONFIG_CONSOLE
     ds = get_displaystate();
+#endif
 
     /* init local displays */
     switch (display_type) {
@@ -4389,7 +4399,9 @@ int main(int argc, char **argv, char **envp)
 #endif
 
     /* display setup */
+#ifdef CONFIG_CONSOLE
     text_consoles_set_display(ds);
+#endif
 
     if (foreach_device_config(DEV_GDB, gdbserver_start) < 0) {
         exit(1);
