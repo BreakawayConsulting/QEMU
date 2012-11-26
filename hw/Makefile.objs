@@ -4,7 +4,8 @@ common-obj-y += qdev.o qdev-properties.o
 common-obj-y += irq.o
 
 ifeq ($(CONFIG_SOFTMMU),y)
-common-obj-y += usb/ ide/ pci/
+common-obj-y += usb/ pci/
+common-obj-$(CONFIG_IDE) += ide/
 common-obj-y += loader.o
 common-obj-$(CONFIG_VIRTIO) += virtio-console.o
 common-obj-$(CONFIG_VIRTIO) += virtio-rng.o

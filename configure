@@ -215,6 +215,7 @@ trace_backend="nop"
 trace_file="trace"
 spice=""
 console="yes"
+ide="yes"
 rbd=""
 smartcard_nss=""
 usb_redir=""
@@ -783,6 +784,10 @@ for opt do
   --disable-console) console="no"
   ;;
   --enable-console) console="yes"
+  ;;
+  --disable-ide) ide="no"
+  ;;
+  --enable-ide) ide="yes"
   ;;
   --disable-libiscsi) libiscsi="no"
   ;;
@@ -3459,6 +3464,7 @@ echo "build guest agent $guest_agent"
 echo "seccomp support   $seccomp"
 echo "coroutine backend $coroutine_backend"
 echo "console support   $console"
+echo "IDE support       $ide"
 echo "GlusterFS support $glusterfs"
 echo "virtio-blk-data-plane $virtio_blk_data_plane"
 echo "gcov              $gcov_tool"
