@@ -6,6 +6,7 @@ common-obj-y += irq.o
 ifeq ($(CONFIG_SOFTMMU),y)
 common-obj-y += usb/ pci/
 common-obj-$(CONFIG_IDE) += ide/
+common-obj-$(CONFIG_USB) += usb/
 common-obj-y += loader.o
 common-obj-$(CONFIG_VIRTIO) += virtio-console.o
 common-obj-$(CONFIG_VIRTIO) += virtio-rng.o

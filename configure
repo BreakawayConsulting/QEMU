@@ -216,6 +216,7 @@ trace_file="trace"
 spice=""
 console="yes"
 ide="yes"
+usb="yes"
 rbd=""
 smartcard_nss=""
 usb_redir=""
@@ -788,6 +789,10 @@ for opt do
   --disable-ide) ide="no"
   ;;
   --enable-ide) ide="yes"
+  ;;
+  --disable-usb) usb="no"
+  ;;
+  --enable-usb) usb="yes"
   ;;
   --disable-libiscsi) libiscsi="no"
   ;;
@@ -3465,6 +3470,7 @@ echo "seccomp support   $seccomp"
 echo "coroutine backend $coroutine_backend"
 echo "console support   $console"
 echo "IDE support       $ide"
+echo "USB support       $usb"
 echo "GlusterFS support $glusterfs"
 echo "virtio-blk-data-plane $virtio_blk_data_plane"
 echo "gcov              $gcov_tool"
@@ -3763,6 +3769,10 @@ fi
 
 if test "$console" = "yes" ; then
   echo "CONFIG_CONSOLE=y" >> $config_host_mak
+fi
+
+if test "$usb" = "yes" ; then
+  echo "CONFIG_USB=y" >> $config_host_mak
 fi
 
 if test "$smartcard_nss" = "yes" ; then
