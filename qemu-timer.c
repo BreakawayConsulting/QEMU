@@ -24,7 +24,6 @@
 
 #include "sysemu/sysemu.h"
 #include "monitor/monitor.h"
-#include "ui/console.h"
 
 #include "hw/hw.h"
 
@@ -376,7 +375,7 @@ void qemu_run_timers(QEMUClock *clock)
 {
     QEMUTimer *ts;
     int64_t current_time;
-   
+
     if (!clock->enabled)
         return;
 
@@ -491,7 +490,7 @@ static int dynticks_start_timer(struct qemu_alarm_timer *t)
 
     sigaction(SIGALRM, &act, NULL);
 
-    /* 
+    /*
      * Initialize ev struct to 0 to avoid valgrind complaining
      * about uninitialized data in timer_create call
      */
@@ -789,4 +788,3 @@ int init_timer_alarm(void)
 fail:
     return err;
 }
-

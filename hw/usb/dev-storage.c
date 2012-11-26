@@ -13,7 +13,6 @@
 #include "hw/usb.h"
 #include "hw/usb/desc.h"
 #include "hw/scsi.h"
-#include "ui/console.h"
 #include "monitor/monitor.h"
 #include "sysemu/sysemu.h"
 #include "sysemu/blockdev.h"
