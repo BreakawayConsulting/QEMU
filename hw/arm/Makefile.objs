@@ -56,6 +56,7 @@ obj-$(CONFIG_MACHINE_PALM) += palm.o
 obj-$(CONFIG_MACHINE_REALVIEW) += realview.o
 obj-$(CONFIG_MACHINE_SPITZ) += spitz.o
 obj-$(CONFIG_MACHINE_STELLARIS) += arm/stellaris.o stellaris_enet.o
+obj-$(CONFIG_MACHINE_SIMPLE_ARMV7M) += simple_armv7m.o
 obj-$(CONFIG_MACHINE_TOSA) += tosa.o
 obj-$(CONFIG_MACHINE_VERSATILE) += versatilepb.o vexpress.o
 obj-$(CONFIG_MACHINE_XLINUX_ZYNQ) += xilinx_zynq.o
