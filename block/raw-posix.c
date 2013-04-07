@@ -39,7 +39,6 @@
 #include <IOKit/storage/IOMediaBSDClient.h>
 #include <IOKit/storage/IOMedia.h>
 #include <IOKit/storage/IOCDMedia.h>
-//#include <IOKit/storage/IOCDTypes.h>
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
@@ -426,24 +425,6 @@ static void raw_reopen_abort(BDRVReopenState *state)
     g_free(state->opaque);
     state->opaque = NULL;
 }
-
-
-/* XXX: use host sector size if necessary with:
-#ifdef DIOCGSECTORSIZE
-        {
-            unsigned int sectorsize = 512;
-            if (!ioctl(fd, DIOCGSECTORSIZE, &sectorsize) &&
-                sectorsize > bufsize)
-                bufsize = sectorsize;
-        }
-#endif
-#ifdef CONFIG_COCOA
-        uint32_t blockSize = 512;
-        if ( !ioctl( fd, DKIOCGETBLOCKSIZE, &blockSize ) && blockSize > bufsize) {
-            bufsize = blockSize;
-        }
-#endif
-*/
 
 static ssize_t handle_aiocb_ioctl(RawPosixAIOData *aiocb)
 {
