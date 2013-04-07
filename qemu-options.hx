@@ -154,8 +154,8 @@ Set default value of @var{driver}'s property @var{prop} to @var{value}, e.g.:
 qemu-system-i386 -global ide-drive.physical_block_size=4096 -drive file=file,if=ide,index=0,media=disk
 @end example
 
-In particular, you can use this to set driver properties for devices which are 
-created automatically by the machine model. To create a device which is not 
+In particular, you can use this to set driver properties for devices which are
+created automatically by the machine model. To create a device which is not
 created automatically and set properties on it, use -@option{device}.
 ETEXI
 
@@ -2893,6 +2893,17 @@ STEXI
 Don't create default devices. Normally, QEMU sets the default devices like serial
 port, parallel port, virtual console, monitor device, VGA adapter, floppy and
 CD-ROM drive and others. The @code{-nodefaults} option will disable all those
+default devices.
+ETEXI
+
+DEF("defaults", 0, QEMU_OPTION_defaults, \
+    "-defaults     create default devices\n", QEMU_ARCH_ALL)
+STEXI
+@item -defaults
+@findex -defaults
+Create default devices. QEMU can create default devices like serial
+port, parallel port, virtual console, monitor device, VGA adapter, floppy and
+CD-ROM drive and others. The @code{-defaults} option will enable all the
 default devices.
 ETEXI
 

@@ -3798,6 +3798,18 @@ int main(int argc, char **argv, char **envp)
                 default_sdcard = 0;
                 default_vga = 0;
                 break;
+            case QEMU_OPTION_defaults:
+                default_serial = 1;
+                default_parallel = 1;
+                default_virtcon = 1;
+                default_sclp = 1;
+                default_monitor = 1;
+                default_net = 1;
+                default_floppy = 1;
+                default_cdrom = 1;
+                default_sdcard = 1;
+                default_vga = 1;
+                break;
             case QEMU_OPTION_xen_domid:
                 if (!(xen_available())) {
                     printf("Option %s not supported for this target\n", popt->name);
