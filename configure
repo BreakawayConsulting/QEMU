@@ -1353,7 +1353,13 @@ else
 fi
 # see if system emulation was really requested
 case " $target_list " in
-  *"-softmmu "*) softmmu=yes
+  *"-softmmu "*)
+    if test "$softmmu" = "no"; then
+      echo "ERROR: System emulation disabled (via --disable-system), however a "
+      echo "       system emulation target specified in --target-list."
+      exit 1
+    fi
+    softmmu=yes
   ;;
   *) softmmu=no
   ;;
