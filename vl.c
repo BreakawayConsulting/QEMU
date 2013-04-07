@@ -2410,7 +2410,7 @@ static int mon_init_func(QemuOpts *opts, void *opaque)
     }
 
     qemu_chr_fe_claim_no_fail(chr);
-    monitor_init(chr, flags);
+    monitor_add(chr, flags);
     return 0;
 }
 
@@ -4192,6 +4192,8 @@ int main(int argc, char **argv, char **envp)
 
     qemu_init_cpu_loop();
     qemu_mutex_lock_iothread();
+
+    monitor_init();
 
 #ifdef CONFIG_SPICE
     /* spice needs the timers to be initialized by this point */

@@ -3326,7 +3326,7 @@ CharDriverState *qemu_chr_new(const char *label, const char *filename, void (*in
     }
     if (chr && qemu_opt_get_bool(opts, "mux", 0)) {
         qemu_chr_fe_claim_no_fail(chr);
-        monitor_init(chr, MONITOR_USE_READLINE);
+        monitor_add(chr, MONITOR_USE_READLINE);
     }
     return chr;
 }

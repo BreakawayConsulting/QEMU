@@ -4779,16 +4779,22 @@ static void sortcmdlist(void)
  *  tab-width: 8
  * End:
  */
+static int monitor_is_initted = 0;
 
-void monitor_init(CharDriverState *chr, int flags)
+void monitor_init(void)
 {
-    static int is_first_init = 1;
+    assert(monitor_is_initted == 0);
+
+    monitor_protocol_event_init();
+
+    monitor_is_initted = 1;
+}
+
+void monitor_add(CharDriverState *chr, int flags)
+{
     Monitor *mon;
 
-    if (is_first_init) {
-        monitor_protocol_event_init();
-        is_first_init = 0;
-    }
+    assert(monitor_is_initted == 1);
 
     mon = g_malloc0(sizeof(*mon));
     mon->outbuf = qstring_new();

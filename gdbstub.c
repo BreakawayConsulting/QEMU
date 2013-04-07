@@ -1150,7 +1150,7 @@ static int cpu_gdb_write_register(CPUMIPSState *env, uint8_t *mem_buf, int n)
         }
         break;
     case 72: /* fp, ignored */ break;
-    default: 
+    default:
 	if (n > 89)
 	    return 0;
 	/* Other registers are readonly.  Ignore writes.  */
@@ -2800,7 +2800,7 @@ gdb_handlesig (CPUArchState *env, int sig)
       snprintf(buf, sizeof(buf), "S%02x", target_signal_to_gdb (sig));
       put_packet(s, buf);
     }
-  /* put_packet() might have detected that the peer terminated the 
+  /* put_packet() might have detected that the peer terminated the
      connection.  */
   if (s->fd < 0)
       return sig;
@@ -3046,7 +3046,7 @@ int gdbserver_start(const char *device)
         /* Initialize a monitor terminal for gdb */
         mon_chr = g_malloc0(sizeof(*mon_chr));
         mon_chr->chr_write = gdb_monitor_write;
-        monitor_init(mon_chr, 0);
+        monitor_add(mon_chr, 0);
     } else {
         if (s->chr)
             qemu_chr_delete(s->chr);

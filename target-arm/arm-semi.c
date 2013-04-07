@@ -240,7 +240,7 @@ uint32_t do_arm_semihosting(CPUARMState *env)
                 gdb_do_syscall(arm_semi_cb, "write,2,%x,1", args);
                 return env->regs[0];
           } else {
-                return write(STDERR_FILENO, &c, 1);
+              return write(STDERR_FILENO, &c, 1);
           }
         }
     case TARGET_SYS_WRITE0:
