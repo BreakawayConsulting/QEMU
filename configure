@@ -168,6 +168,7 @@ attr=""
 libattr=""
 xfs=""
 
+default_devices="yes"
 vhost_net="no"
 kvm="no"
 gprof="no"
@@ -679,6 +680,10 @@ for opt do
   --without-system-pixman) pixman="internal"
   ;;
   --without-pixman) pixman="none"
+  ;;
+  --enable-default-devices) default_devices="no"
+  ;;
+  --disable-default-devices) default_devices="yes"
   ;;
   --disable-sdl) sdl="no"
   ;;
@@ -3469,6 +3474,7 @@ echo "build guest agent $guest_agent"
 echo "seccomp support   $seccomp"
 echo "coroutine backend $coroutine_backend"
 echo "console support   $console"
+echo "default devices   $default_devices"
 echo "IDE support       $ide"
 echo "USB support       $usb"
 echo "GlusterFS support $glusterfs"
@@ -3765,6 +3771,10 @@ fi
 
 if test "$spice" = "yes" ; then
   echo "CONFIG_SPICE=y" >> $config_host_mak
+fi
+
+if test "$default_devices" = "yes" ; then
+  echo "CONFIG_DEFAULT_DEVICES=y" >> $config_host_mak
 fi
 
 if test "$console" = "yes" ; then

@@ -47,7 +47,13 @@
 
 static QTAILQ_HEAD(, NetClientState) net_clients;
 
-int default_net = 1;
+#ifdef CONFIG_DEFAULT_DEVICES
+#define DEFAULT_DEVICES 0
+#else
+#define DEFAULT_DEVICES 1
+#endif
+
+int default_net = DEFAULT_DEVICES;
 
 /***********************************************************/
 /* network device redirectors */

@@ -275,15 +275,21 @@ uint32_t xen_domid;
 enum xen_mode xen_mode = XEN_EMULATE;
 static int tcg_tb_size;
 
-static int default_serial = 1;
-static int default_parallel = 1;
-static int default_virtcon = 1;
-static int default_sclp = 1;
-static int default_monitor = 1;
-static int default_floppy = 1;
-static int default_cdrom = 1;
-static int default_sdcard = 1;
-static int default_vga = 1;
+#ifdef CONFIG_DEFAULT_DEVICES
+#define DEFAULT_DEVICES 0
+#else
+#define DEFAULT_DEVICES 1
+#endif
+
+static int default_serial = DEFAULT_DEVICES;
+static int default_parallel = DEFAULT_DEVICES;
+static int default_virtcon = DEFAULT_DEVICES;
+static int default_sclp = DEFAULT_DEVICES;
+static int default_monitor = DEFAULT_DEVICES;
+static int default_floppy = DEFAULT_DEVICES;
+static int default_cdrom = DEFAULT_DEVICES;
+static int default_sdcard = DEFAULT_DEVICES;
+static int default_vga = DEFAULT_DEVICES;
 
 static struct {
     const char *driver;
