@@ -1713,6 +1713,11 @@ static void do_v7m_exception_exit(CPUARMState *env)
     env->regs[12] = v7m_pop(env);
     env->regs[14] = v7m_pop(env);
     env->regs[15] = v7m_pop(env);
+
+    if ((env->regs[15] & 0x1) != 0) {
+        fprintf(stderr, "Error: PC should be half-word aligned on return " \
+                "from exception (PC=%x)\n", env->regs[15]);
+    }
     xpsr = v7m_pop(env);
     xpsr_write(env, xpsr, 0xfffffdff);
     /* Undo stack alignment.  */
@@ -1782,6 +1787,8 @@ void arm_v7m_cpu_do_interrupt(CPUState *cs)
     /* ??? Should only do this if Configuration Control Register
        STACKALIGN bit is set.  */
     if (env->regs[13] & 4) {
+        fprintf(stderr, "Error: Invalid stack alignment from. (SP=%x PC=%x)\n",
+                env->regs[13], env->regs[15]);
         env->regs[13] -= 4;
         xpsr |= 0x200;
     }
