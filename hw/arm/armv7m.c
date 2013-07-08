@@ -10,7 +10,13 @@
 #include "hw/sysbus.h"
 #include "hw/arm-misc.h"
 #include "hw/loader.h"
+#include "sysemu/sysemu.h"
 #include "elf.h"
+
+/* FIXME: make this local state.  */
+static qemu_irq pic[64];
+static Notifier machine_ready;
+static ARMCPU *cpu;
 
 static void armv7m_bitband_init(void)
 {
@@ -36,6 +42,11 @@ static void armv7m_reset(void *opaque)
     cpu_reset(CPU(cpu));
 }
 
+static void armv7m_machine_ready(Notifier *n, void *opaque)
+{
+    qemu_register_reset(armv7m_reset, cpu);
+}
+
 /* Init CPU and memory for a v7-M based board.
    flash_size and sram_size are in kb.
    Returns the NVIC array.  */
@@ -44,11 +55,8 @@ qemu_irq *armv7m_init(MemoryRegion *address_space_mem,
                       int flash_size, int sram_size,
                       const char *kernel_filename, const char *cpu_model)
 {
-    ARMCPU *cpu;
     CPUARMState *env;
     DeviceState *nvic;
-    /* FIXME: make this local state.  */
-    static qemu_irq pic[64];
     qemu_irq *cpu_pic;
     int image_size;
     uint64_t entry;
@@ -130,6 +138,17 @@ qemu_irq *armv7m_init(MemoryRegion *address_space_mem,
     vmstate_register_ram_global(hack);
     memory_region_add_subregion(address_space_mem, 0xfffff000, hack);
 
-    qemu_register_reset(armv7m_reset, cpu);
+    /* When the machine is ready, the notify function will register
+       the armv7m_reset function. This is done indirectly to ensure
+       that the rom_reset function is registered before the
+       armv7m_reset function is registered.
+
+       This ensures that ROMs are loaded in to memory *before* the
+       CPU resets, which is essential to ensure that the initial PC
+       and SP are correctly read from address 0x0.
+    */
+    machine_ready.notify = armv7m_machine_ready;
+    qemu_add_machine_init_done_notifier(&machine_ready);
+
     return pic;
 }
