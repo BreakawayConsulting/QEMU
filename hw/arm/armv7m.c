@@ -109,23 +109,19 @@ qemu_irq *armv7m_init(MemoryRegion *address_space_mem,
     big_endian = 0;
 #endif
 
-    if (!kernel_filename) {
-        fprintf(stderr, "Guest image must be specified (using -kernel)\n");
-        exit(1);
+    if (kernel_filename) {
+        image_size = load_elf(kernel_filename, NULL, NULL, &entry, &lowaddr,
+                              NULL, big_endian, ELF_MACHINE, 1);
+        if (image_size < 0) {
+            image_size = load_image_targphys(kernel_filename, 0, flash_size);
+            lowaddr = 0;
+        }
+        if (image_size < 0) {
+            fprintf(stderr, "qemu: could not load kernel '%s'\n",
+                    kernel_filename);
+            exit(1);
+        }
     }
-
-    image_size = load_elf(kernel_filename, NULL, NULL, &entry, &lowaddr,
-                          NULL, big_endian, ELF_MACHINE, 1);
-    if (image_size < 0) {
-        image_size = load_image_targphys(kernel_filename, 0, flash_size);
-	lowaddr = 0;
-    }
-    if (image_size < 0) {
-        fprintf(stderr, "qemu: could not load kernel '%s'\n",
-                kernel_filename);
-        exit(1);
-    }
-
     /* Hack to map an additional page of ram at the top of the address
        space.  This stops qemu complaining about executing code outside RAM
        when returning from an exception.  */
