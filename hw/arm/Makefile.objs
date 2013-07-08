@@ -6,7 +6,7 @@ obj-y += bitbang_i2c.o
 
 ## ARM Options
 obj-$(CONFIG_ARM_MPCORE) += arm11mpcore.o a9mpcore.o arm_mptimer.o a15mpcore.o
-obj-$(CONFIG_ARM_V7) += arm/armv7m.o
+obj-$(CONFIG_ARM_V7) += arm/armv7m.o arm/armv7m_bitband.o
 obj-$(CONFIG_ARM_BOOT) += arm_boot.o
 obj-$(CONFIG_ARM_FRAMEBUFFER) += framebuffer.o
 obj-$(CONFIG_ARM_USB) +=  usb/hcd-musb.o
