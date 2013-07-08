@@ -65,12 +65,6 @@ qemu_irq *armv7m_init(MemoryRegion *address_space_mem,
     if (cpu_model == NULL) {
 	cpu_model = "cortex-m3";
     }
-    cpu = cpu_arm_init(cpu_model);
-    if (cpu == NULL) {
-        fprintf(stderr, "Unable to find CPU definition\n");
-        exit(1);
-    }
-    env = &cpu->env;
 
 #if 0
     /* > 32Mb SRAM gets complicated because it overlaps the bitband area.
@@ -93,6 +87,13 @@ qemu_irq *armv7m_init(MemoryRegion *address_space_mem,
     vmstate_register_ram_global(sram);
     memory_region_add_subregion(address_space_mem, 0x20000000, sram);
     armv7m_bitband_init();
+
+    cpu = cpu_arm_init(cpu_model);
+    if (cpu == NULL) {
+        fprintf(stderr, "Unable to find CPU definition\n");
+        exit(1);
+    }
+    env = &cpu->env;
 
     nvic = qdev_create(NULL, "armv7m_nvic");
     env->nvic = nvic;
