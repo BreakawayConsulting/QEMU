@@ -224,7 +224,11 @@ static int os_host_main_loop_wait(uint32_t timeout)
     }
 
     ret = g_poll((GPollFD *)gpollfds->data, gpollfds->len, timeout);
-
+    if (ret == -1 && errno != EINTR)
+    {
+        perror("Error calling g_poll");
+        abort();
+    }
     if (timeout > 0) {
         qemu_mutex_lock_iothread();
     }
