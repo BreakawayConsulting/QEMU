@@ -2493,12 +2493,27 @@ static gboolean tcp_chr_read(GIOChannel *chan, GIOCondition cond, void *opaque)
         len = s->max_size;
     size = tcp_chr_recv(chr, (void *)buf, len);
     if (size == 0) {
+        gboolean removed;
+        IOWatchPoll *iwp = io_watch_poll_from_source(g_main_context_find_source_by_id (NULL, s->tag));
         /* connection closed */
         s->connected = 0;
         if (s->listen_chan) {
             s->listen_tag = g_io_add_watch(s->listen_chan, G_IO_IN, tcp_chr_accept, chr);
         }
-        g_source_remove(s->tag);
+
+        removed = g_source_remove(s->tag);
+        if (removed != true)
+        {
+            fprintf(stderr, "Error removing io tag: %d\n", s->tag);
+            abort();
+        }
+        removed = g_source_remove(g_source_get_id(iwp->src));
+        if (removed != true)
+        {
+            fprintf(stderr, "Error removing io tag: %d\n", s->tag);
+            abort();
+        }
+
         s->tag = 0;
         g_io_channel_unref(s->chan);
         s->chan = NULL;
