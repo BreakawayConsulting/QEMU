@@ -2955,11 +2955,22 @@ static void gdb_chr_receive(void *opaque, const uint8_t *buf, int size)
 static void gdb_chr_event(void *opaque, int event)
 {
     switch (event) {
+    case CHR_EVENT_CLOSED:
+#ifdef DEBUG_GDB
+        printf("GDB CLOSED.\n");
+#endif
+        break;
     case CHR_EVENT_OPENED:
+#ifdef DEBUG_GDB
+        printf("GDB opened.\n");
+#endif
         vm_stop(RUN_STATE_PAUSED);
         gdb_has_xml = 0;
         break;
     default:
+#ifdef DEBUG_GDB
+        printf("Unknown CHR EVENT: %d\n", event);
+#endif
         break;
     }
 }
