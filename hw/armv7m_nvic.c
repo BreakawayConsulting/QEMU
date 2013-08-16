@@ -310,7 +310,10 @@ static void nvic_writel(nvic_state *s, uint32_t offset, uint32_t value)
         s->systick.reload = value;
         break;
     case 0x18: /* SysTick Current Value.  Writes reload the timer.  */
-        systick_reload(s, 1);
+        if (s->systick.control & SYSTICK_ENABLE)
+            systick_reload(s, 1);
+        else
+            s->systick.tick = 0;
         s->systick.control &= ~SYSTICK_COUNTFLAG;
         break;
     case 0xd04: /* Interrupt Control State.  */
