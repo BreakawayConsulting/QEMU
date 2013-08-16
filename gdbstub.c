@@ -2959,11 +2959,13 @@ static void gdb_chr_event(void *opaque, int event)
 #ifdef DEBUG_GDB
         printf("GDB CLOSED.\n");
 #endif
+        gdb_syscall_mode = GDB_SYS_DISABLED;
         break;
     case CHR_EVENT_OPENED:
 #ifdef DEBUG_GDB
         printf("GDB opened.\n");
 #endif
+        gdb_syscall_mode = GDB_SYS_ENABLED;
         vm_stop(RUN_STATE_PAUSED);
         gdb_has_xml = 0;
         break;
